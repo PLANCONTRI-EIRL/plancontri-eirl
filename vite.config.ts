@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 export default defineConfig(() => ({
-  base: '/plncontri-landing-page/',
+  base: '/plancontri-landing-page/',
   server: {
     host: "::",
     port: 8080,
