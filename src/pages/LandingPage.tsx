@@ -30,7 +30,7 @@ const LandingPage = () => {
           </div>
           <div className="md:w-1/2 flex justify-center animate-fade-in-right">
             <img 
-              src="/bg_1.png" 
+              src={`${import.meta.env.BASE_URL}bg_1.png`} 
               alt="Reunión de equipo profesional en oficina moderna" 
               className="w-full max-w-4xl rounded-2xl shadow-2xl object-cover border-4 border-[#7A1F1F]/10"
             />
@@ -183,15 +183,15 @@ const LandingPage = () => {
               <span className="text-base font-semibold text-[#7A1F1F]">CONCAR</span>
             </div>
             <div className="flex flex-col items-center group">
-              <img src="/ICONO ERTICOM-08.png" alt="ERTICOM" className="h-14 w-14 object-contain mb-2 transition-transform group-hover:scale-110 bg-white rounded" />
+              <img src={`${import.meta.env.BASE_URL}ICONO ERTICOM-08.png`} alt="ERTICOM" className="h-14 w-14 object-contain mb-2 transition-transform group-hover:scale-110 bg-white rounded" />
               <span className="text-base font-semibold text-[#7A1F1F]">ERTICOM</span>
             </div>
             <div className="flex flex-col items-center group">
-              <img src="/pdt_128x128.png" alt="PDT PLAME" className="h-14 w-14 object-contain mb-2 transition-transform group-hover:scale-110 bg-white rounded" />
+              <img src={`${import.meta.env.BASE_URL}pdt_128x128.png`} alt="PDT PLAME" className="h-14 w-14 object-contain mb-2 transition-transform group-hover:scale-110 bg-white rounded" />
               <span className="text-base font-semibold text-[#7A1F1F]">PDT PLAME</span>
             </div>
             <div className="flex flex-col items-center group">
-              <img src="/pdt00_1.png" alt="PDT" className="h-14 w-14 object-contain mb-2 transition-transform group-hover:scale-110 bg-white rounded" />
+              <img src={`${import.meta.env.BASE_URL}pdt00_1.png`} alt="PDT" className="h-14 w-14 object-contain mb-2 transition-transform group-hover:scale-110 bg-white rounded" />
               <span className="text-base font-semibold text-[#7A1F1F]">PDT</span>
             </div>
             <div className="flex flex-col items-center group">
@@ -209,7 +209,7 @@ const LandingPage = () => {
           <div className="flex flex-col md:flex-row items-center gap-16 text-left">
             <div className="md:w-1/2 flex justify-center">
               <img 
-                src="/team-celebrating.jpeg" 
+                src={`${import.meta.env.BASE_URL}team-celebrating.jpeg`} 
                 alt="Equipo de PLANCONTRI celebrando" 
                 className="w-full max-w-lg rounded-2xl shadow-2xl object-cover border-4 border-[#7A1F1F]/10"
               />
