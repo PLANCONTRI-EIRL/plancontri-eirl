@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerClose } from "@/components/ui/drawer";
 import { CheckCircle, DollarSign, Calculator, BriefcaseBusiness, Lightbulb, Users, MessageSquare, MapPin, Phone, Mail, Handshake, Target, Headset, TrendingUp, ClipboardCheck } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -10,6 +11,433 @@ import { Label } from "@/components/ui/label";
 import Header from "@/components/Header";
 
 const LandingPage = () => {
+  // Servicios para drawer
+  const servicios = [
+    {
+      key: 'outsourcing-laboral',
+      icon: <Users className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Outsourcing Laboral',
+      short: 'Gestión externa de procesos laborales y recursos humanos.',
+      imagen: `${import.meta.env.BASE_URL}nomina.jpg`,
+      detalle: {
+        descripcion: 'Externaliza la administración de tu personal y nómina para mayor eficiencia y cumplimiento.',
+        beneficios: [
+          'Reducción de carga administrativa',
+          'Cumplimiento normativo',
+          'Optimización de procesos laborales',
+        ],
+        incluye: [
+          'Gestión de planillas',
+          'Contratos y liquidaciones',
+          'Atención a consultas laborales',
+        ],
+      },
+    },
+    {
+      key: 'constitucion-empresas',
+      icon: <BriefcaseBusiness className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Constitución de Empresas',
+      short: 'Acompañamiento integral en la creación legal de tu empresa.',
+      imagen: `${import.meta.env.BASE_URL}consultoria.jpg`,
+      detalle: {
+        descripcion: 'Te guiamos en todo el proceso legal y tributario para constituir tu empresa.',
+        beneficios: [
+          'Asesoría legal y tributaria',
+          'Redacción de estatutos',
+          'Gestión de trámites ante SUNARP y SUNAT',
+        ],
+        incluye: [
+          'Elección de tipo societario',
+          'Inscripción en registros públicos',
+          'Obtención de RUC',
+        ],
+      },
+    },
+    {
+      key: 'asesoria-legal-corporativa',
+      icon: <CheckCircle className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Asesoría Legal Corporativa',
+      short: 'Soluciones legales para empresas y sociedades.',
+      imagen: `${import.meta.env.BASE_URL}consultoria.jpg`,
+      detalle: {
+        descripcion: 'Brindamos soporte legal en contratos, estatutos y cumplimiento normativo.',
+        beneficios: [
+          'Reducción de riesgos legales',
+          'Contratos claros y efectivos',
+          'Cumplimiento de obligaciones',
+        ],
+        incluye: [
+          'Revisión de documentos',
+          'Asesoría en juntas y asambleas',
+          'Consultas legales ilimitadas',
+        ],
+      },
+    },
+    {
+      key: 'asesoria-contable',
+      icon: <Calculator className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Asesoría Contable',
+      short: 'Soporte experto en gestión y registros contables.',
+      imagen: `${import.meta.env.BASE_URL}contabilidad.jpg`,
+      detalle: {
+        descripcion: 'Resuelve tus dudas contables y mejora la gestión de tus libros.',
+        beneficios: [
+          'Contabilidad clara y ordenada',
+          'Prevención de errores',
+          'Ahorro de tiempo',
+        ],
+        incluye: [
+          'Consultas personalizadas',
+          'Revisión de libros',
+          'Soporte en cierres contables',
+        ],
+      },
+    },
+    {
+      key: 'asesoria-tributaria',
+      icon: <DollarSign className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Asesoría Tributaria',
+      short: 'Optimización de impuestos y cumplimiento normativo.',
+      imagen: `${import.meta.env.BASE_URL}asesoria.jpg`,
+      detalle: {
+        descripcion: 'Te ayudamos a cumplir con todas tus obligaciones tributarias.',
+        beneficios: [
+          'Planificación fiscal',
+          'Revisión de declaraciones',
+          'Atención a fiscalizaciones',
+        ],
+        incluye: [
+          'Personas y empresas',
+          'Consultas ilimitadas',
+          'Soporte en auditorías',
+        ],
+      },
+    },
+    {
+      key: 'asesoria-laboral',
+      icon: <Users className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Asesoría Laboral',
+      short: 'Consultoría en temas laborales y derechos del trabajador.',
+      imagen: `${import.meta.env.BASE_URL}nomina.jpg`,
+      detalle: {
+        descripcion: 'Resuelve conflictos y dudas laborales con expertos.',
+        beneficios: [
+          'Cumplimiento de normas laborales',
+          'Prevención de sanciones',
+          'Mejor clima laboral',
+        ],
+        incluye: [
+          'Consultas legales',
+          'Soporte en inspecciones',
+          'Gestión de contratos',
+        ],
+      },
+    },
+    {
+      key: 'asesoria-financiera',
+      icon: <TrendingUp className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Asesoría Financiera y Análisis de Rentabilidad de Empresas',
+      short: 'Análisis financiero y estrategias para tu empresa.',
+      imagen: `${import.meta.env.BASE_URL}planificacion.jpg`,
+      detalle: {
+        descripcion: 'Mejora la rentabilidad y toma decisiones informadas.',
+        beneficios: [
+          'Análisis de estados financieros',
+          'Proyecciones y presupuestos',
+          'Estrategias de rentabilidad',
+        ],
+        incluye: [
+          'Reportes personalizados',
+          'Acompañamiento estratégico',
+          'Herramientas de control',
+        ],
+      },
+    },
+    {
+      key: 'asesoria-administrativa',
+      icon: <ClipboardCheck className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Asesoría Administrativa',
+      short: 'Optimización de procesos y gestión administrativa.',
+      imagen: `${import.meta.env.BASE_URL}auditoria.jpg`,
+      detalle: {
+        descripcion: 'Mejora la eficiencia y organización de tu empresa.',
+        beneficios: [
+          'Procesos más ágiles',
+          'Reducción de costos',
+          'Mejor control interno',
+        ],
+        incluye: [
+          'Diagnóstico administrativo',
+          'Planes de mejora',
+          'Soporte continuo',
+        ],
+      },
+    },
+    {
+      key: 'registro-marca',
+      icon: <Lightbulb className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Registro de Marca y Nombre Comercial',
+      short: 'Protege tu marca y tu identidad comercial.',
+      imagen: `${import.meta.env.BASE_URL}consultoria.jpg`,
+      detalle: {
+        descripcion: 'Te ayudamos a registrar y proteger tu marca.',
+        beneficios: [
+          'Asesoría en trámites',
+          'Protección legal',
+          'Diferenciación en el mercado',
+        ],
+        incluye: [
+          'Búsqueda de antecedentes',
+          'Gestión ante INDECOPI',
+          'Seguimiento del proceso',
+        ],
+      },
+    },
+    {
+      key: 'valoracion-empresas',
+      icon: <TrendingUp className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Valoración de Empresas',
+      short: 'Determina el valor real de tu empresa.',
+      imagen: `${import.meta.env.BASE_URL}planificacion.jpg`,
+      detalle: {
+        descripcion: 'Realizamos valuaciones profesionales para ventas, fusiones o inversiones.',
+        beneficios: [
+          'Valoración objetiva',
+          'Soporte en negociaciones',
+          'Análisis de mercado',
+        ],
+        incluye: [
+          'Informe de valoración',
+          'Metodologías reconocidas',
+          'Acompañamiento en procesos',
+        ],
+      },
+    },
+    {
+      key: 'implementacion-niif',
+      icon: <ClipboardCheck className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Implementación de las NIIF',
+      short: 'Adapta tu contabilidad a las Normas Internacionales.',
+      imagen: `${import.meta.env.BASE_URL}contabilidad.jpg`,
+      detalle: {
+        descripcion: 'Te guiamos en la transición y cumplimiento de las NIIF.',
+        beneficios: [
+          'Cumplimiento internacional',
+          'Mejor acceso a financiamiento',
+          'Transparencia financiera',
+        ],
+        incluye: [
+          'Capacitación',
+          'Implementación de procesos',
+          'Soporte técnico',
+        ],
+      },
+    },
+    {
+      key: 'cambio-calidad-migratoria',
+      icon: <ClipboardCheck className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Cambio de Calidad Migratoria',
+      short: 'Asesoría en trámites migratorios y regularización.',
+      imagen: `${import.meta.env.BASE_URL}consultoria.jpg`,
+      detalle: {
+        descripcion: 'Te ayudamos a gestionar tu cambio de calidad migratoria.',
+        beneficios: [
+          'Trámite ágil y seguro',
+          'Cumplimiento legal',
+          'Soporte en documentación',
+        ],
+        incluye: [
+          'Revisión de requisitos',
+          'Acompañamiento en el proceso',
+          'Consultas ilimitadas',
+        ],
+      },
+    },
+    {
+      key: 'seleccion-personal',
+      icon: <Users className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Selección de Personal',
+      short: 'Encuentra el talento ideal para tu empresa.',
+      imagen: `${import.meta.env.BASE_URL}nomina.jpg`,
+      detalle: {
+        descripcion: 'Procesos de reclutamiento y selección eficientes y confiables.',
+        beneficios: [
+          'Ahorro de tiempo',
+          'Talento calificado',
+          'Reducción de rotación',
+        ],
+        incluye: [
+          'Publicación de vacantes',
+          'Entrevistas y evaluaciones',
+          'Presentación de candidatos',
+        ],
+      },
+    },
+    {
+      key: 'asesoria',
+      icon: <DollarSign className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Asesoría Tributaria',
+      short: 'Optimización de impuestos y cumplimiento normativo para individuos y empresas, maximizando tus ahorros.',
+      imagen: `${import.meta.env.BASE_URL}asesoria.jpg`,
+      detalle: {
+        descripcion: 'Te ayudamos a cumplir con todas tus obligaciones tributarias, optimizando tu carga fiscal y evitando sanciones.',
+        beneficios: [
+          'Planificación fiscal personalizada',
+          'Revisión y presentación de declaraciones',
+          'Atención a fiscalizaciones y requerimientos SUNAT',
+          'Asesoría en regímenes tributarios',
+        ],
+        incluye: [
+          'Personas naturales y empresas',
+          'Consultas ilimitadas durante el servicio',
+          'Soporte en auditorías tributarias',
+        ],
+        articulos: [
+          { titulo: '¿Qué es la planificación fiscal?', url: '#' },
+          { titulo: 'Errores comunes en declaraciones SUNAT', url: '#' },
+        ],
+        links: [
+          { titulo: 'SUNAT', url: 'https://www.sunat.gob.pe/' },
+          { titulo: 'Regímenes Tributarios', url: 'https://www.sunat.gob.pe/legislacion/tribu/regimenes.htm' },
+        ],
+      },
+    },
+    {
+      key: 'contabilidad',
+      icon: <Calculator className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Contabilidad Integral',
+      short: 'Gestión completa de libros contables, asegurando registros precisos y actualizados para tu tranquilidad.',
+      imagen: `${import.meta.env.BASE_URL}contabilidad.jpg`,
+      detalle: {
+        descripcion: 'Llevamos tu contabilidad al día, cumpliendo con las normativas vigentes.',
+        beneficios: [
+          'Elaboración de estados financieros',
+          'Registro y control de operaciones',
+          'Reportes mensuales y anuales',
+        ],
+        incluye: [
+          'Digitalización de documentos',
+          'Asesoría en cierre contable',
+          'Atención personalizada',
+        ],
+        articulos: [
+          { titulo: 'Importancia de los estados financieros', url: '#' },
+          { titulo: '¿Cómo organizar tus comprobantes?', url: '#' },
+        ],
+        links: [
+          { titulo: 'Normas Contables', url: 'https://www.mef.gob.pe/es/normas-legales-contabilidad' },
+        ],
+      },
+    },
+    {
+      key: 'consultoria',
+      icon: <BriefcaseBusiness className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Consultoría Empresarial',
+      short: 'Estrategias financieras personalizadas para impulsar el crecimiento y la rentabilidad de tu negocio.',
+      imagen: `${import.meta.env.BASE_URL}consultoria.jpg`,
+      detalle: {
+        descripcion: 'Te asesoramos en la toma de decisiones estratégicas y optimización de procesos.',
+        beneficios: [
+          'Análisis financiero y de rentabilidad',
+          'Proyecciones y presupuestos',
+          'Acompañamiento en proyectos',
+        ],
+        incluye: [
+          'Diagnóstico empresarial',
+          'Planes de mejora',
+          'Soporte continuo',
+        ],
+        articulos: [
+          { titulo: 'Cómo hacer un diagnóstico empresarial', url: '#' },
+        ],
+        links: [
+          { titulo: 'MEF', url: 'https://www.mef.gob.pe/' },
+        ],
+      },
+    },
+    {
+      key: 'nomina',
+      icon: <Users className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Gestión de Nómina',
+      short: 'Procesamiento eficiente y puntual de nóminas, con total cumplimiento legal y sin complicaciones.',
+      imagen: `${import.meta.env.BASE_URL}nomina.jpg`,
+      detalle: {
+        descripcion: 'Gestionamos el cálculo y pago de sueldos, beneficios sociales y obligaciones laborales.',
+        beneficios: [
+          'Cálculo de planillas y boletas',
+          'Gestión de CTS, gratificaciones y vacaciones',
+          'Cumplimiento de obligaciones laborales',
+        ],
+        incluye: [
+          'Atención a consultas de trabajadores',
+          'Soporte en inspecciones laborales',
+          'Confidencialidad garantizada',
+        ],
+        articulos: [
+          { titulo: '¿Qué es la CTS?', url: '#' },
+        ],
+        links: [
+          { titulo: 'Ministerio de Trabajo', url: 'https://www.gob.pe/mtpe' },
+        ],
+      },
+    },
+    {
+      key: 'auditoria',
+      icon: <ClipboardCheck className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Auditoría y Cumplimiento',
+      short: 'Evaluaciones rigurosas para asegurar la transparencia financiera y la adherencia a las normativas vigentes.',
+      imagen: `${import.meta.env.BASE_URL}auditoria.jpg`,
+      detalle: {
+        descripcion: 'Realizamos auditorías internas y externas, revisiones de cumplimiento y controles.',
+        beneficios: [
+          'Detección de riesgos y oportunidades',
+          'Recomendaciones de mejora',
+          'Cumplimiento normativo',
+        ],
+        incluye: [
+          'Informes detallados',
+          'Seguimiento de hallazgos',
+          'Soporte en implementación de mejoras',
+        ],
+        articulos: [
+          { titulo: '¿Por qué hacer una auditoría interna?', url: '#' },
+        ],
+        links: [
+          { titulo: 'Normas de Auditoría', url: 'https://www.mef.gob.pe/es/normas-legales-contabilidad' },
+        ],
+      },
+    },
+    {
+      key: 'planificacion',
+      icon: <TrendingUp className="h-12 w-12 text-[#7A1F1F] mb-4" />, 
+      title: 'Planificación Financiera',
+      short: 'Guía experta para construir un futuro financiero sólido y alcanzar tus metas personales o empresariales.',
+      imagen: `${import.meta.env.BASE_URL}planificacion.jpg`,
+      detalle: {
+        descripcion: 'Te ayudamos a definir objetivos financieros, elaborar presupuestos y planes de inversión.',
+        beneficios: [
+          'Proyección de crecimiento',
+          'Optimización de recursos',
+          'Estrategias de inversión',
+        ],
+        incluye: [
+          'Asesoría personalizada',
+          'Herramientas de control financiero',
+          'Acompañamiento en la toma de decisiones',
+        ],
+        articulos: [
+          { titulo: '¿Por qué planificar tus finanzas?', url: '#' },
+        ],
+        links: [
+          { titulo: 'Educación Financiera SBS', url: 'https://www.sbs.gob.pe/educacion-financiera' },
+        ],
+      },
+    },
+  ];
+
+  const [servicioActivo, setServicioActivo] = useState(null);
+  const [mostrarTodosServicios, setMostrarTodosServicios] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f8f6f4] to-[#eaeaea] text-[#222] font-sans">
       <Header />
@@ -80,73 +508,128 @@ const LandingPage = () => {
             Desde la gestión diaria hasta la planificación estratégica, cubrimos todas tus necesidades contables y tributarias.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-14">
-            <Card className="shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-2 border-border rounded-xl">
-              <CardHeader>
-                <DollarSign className="h-12 w-12 text-[#7A1F1F] mb-4" />
-                <CardTitle className="text-2xl font-bold text-[#7A1F1F]">Asesoría Tributaria</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-lg text-[#7A1F1F]/80">
-                  Optimización de impuestos y cumplimiento normativo para individuos y empresas, maximizando tus ahorros.
-                </CardDescription>
-              </CardContent>
-            </Card>
-            <Card className="shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-2 border-border rounded-xl">
-              <CardHeader>
-                <Calculator className="h-12 w-12 text-[#7A1F1F] mb-4" />
-                <CardTitle className="text-2xl font-bold text-[#7A1F1F]">Contabilidad Integral</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-lg text-[#7A1F1F]/80">
-                  Gestión completa de libros contables, asegurando registros precisos y actualizados para tu tranquilidad.
-                </CardDescription>
-              </CardContent>
-            </Card>
-            <Card className="shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-2 border-border rounded-xl">
-              <CardHeader>
-                <BriefcaseBusiness className="h-12 w-12 text-[#7A1F1F] mb-4" />
-                <CardTitle className="text-2xl font-bold text-[#7A1F1F]">Consultoría Empresarial</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-lg text-[#7A1F1F]/80">
-                  Estrategias financieras personalizadas para impulsar el crecimiento y la rentabilidad de tu negocio.
-                </CardDescription>
-              </CardContent>
-            </Card>
-            <Card className="shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-2 border-border rounded-xl">
-              <CardHeader>
-                <Users className="h-12 w-12 text-[#7A1F1F] mb-4" />
-                <CardTitle className="text-2xl font-bold text-[#7A1F1F]">Gestión de Nómina</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-lg text-[#7A1F1F]/80">
-                  Procesamiento eficiente y puntual de nóminas, con total cumplimiento legal y sin complicaciones.
-                </CardDescription>
-              </CardContent>
-            </Card>
-            <Card className="shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-2 border-border rounded-xl">
-              <CardHeader>
-                <ClipboardCheck className="h-12 w-12 text-[#7A1F1F] mb-4" />
-                <CardTitle className="text-2xl font-bold text-[#7A1F1F]">Auditoría y Cumplimiento</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-lg text-[#7A1F1F]/80">
-                  Evaluaciones rigurosas para asegurar la transparencia financiera y la adherencia a las normativas vigentes.
-                </CardDescription>
-              </CardContent>
-            </Card>
-            <Card className="shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-2 border-border rounded-xl">
-              <CardHeader>
-                <TrendingUp className="h-12 w-12 text-[#7A1F1F] mb-4" />
-                <CardTitle className="text-2xl font-bold text-[#7A1F1F]">Planificación Financiera</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-lg text-[#7A1F1F]/80">
-                  Guía experta para construir un futuro financiero sólido y alcanzar tus metas personales o empresariales.
-                </CardDescription>
-              </CardContent>
-            </Card>
+            {servicios.slice(0, 6).map((servicio) => (
+              <Card
+                key={servicio.key}
+                className="relative shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-2 border-border rounded-xl cursor-pointer group"
+                onClick={() => setServicioActivo(servicio)}
+              >
+                <CardHeader>
+                  {servicio.icon}
+                  <CardTitle className="text-2xl font-bold text-[#7A1F1F]">{servicio.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-lg text-[#7A1F1F]/80 mb-2">
+                    {servicio.short}
+                  </CardDescription>
+                  <div className="flex justify-end">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-[#7A1F1F]/10 text-[#7A1F1F] group-hover:bg-[#7A1F1F]/20 transition">Ver más
+                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
+          {/* Servicios extra con animación */}
+          <div
+            className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-14 transition-all duration-500 ease-in-out overflow-hidden ${mostrarTodosServicios ? 'max-h-[2000px] opacity-100 mt-6' : 'max-h-0 opacity-0 pointer-events-none'}`}
+            style={{ transitionProperty: 'max-height, opacity, margin-top' }}
+          >
+            {servicios.slice(6).map((servicio) => (
+              <Card
+                key={servicio.key}
+                className="relative shadow-md hover:shadow-lg transition-shadow duration-300 transform hover:-translate-y-2 border-border rounded-xl cursor-pointer group"
+                onClick={() => setServicioActivo(servicio)}
+              >
+                <CardHeader>
+                  {servicio.icon}
+                  <CardTitle className="text-2xl font-bold text-[#7A1F1F]">{servicio.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-lg text-[#7A1F1F]/80 mb-2">
+                    {servicio.short}
+                  </CardDescription>
+                  <div className="flex justify-end">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-[#7A1F1F]/10 text-[#7A1F1F] group-hover:bg-[#7A1F1F]/20 transition">Ver más
+                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          {servicios.length > 6 && (
+            <div className="flex justify-center mt-8">
+              <Button
+                variant="outline"
+                className="px-8 py-3 rounded-full font-semibold text-[#7A1F1F] border-[#7A1F1F]/30 hover:bg-[#7A1F1F]/10 transition"
+                onClick={() => setMostrarTodosServicios((v) => !v)}
+              >
+                {mostrarTodosServicios ? 'Ver menos servicios' : 'Ver más servicios'}
+              </Button>
+            </div>
+          )}
+          {/* Drawer para detalles de servicio */}
+          <Drawer open={!!servicioActivo} onOpenChange={open => !open && setServicioActivo(null)}>
+            <DrawerContent className="max-w-2xl w-full mx-auto h-[90vh] md:h-[80vh] flex flex-col">
+              <DrawerHeader>
+                <div className="flex items-center gap-4">
+                  {servicioActivo?.icon}
+                  <div>
+                    <DrawerTitle>{servicioActivo?.title}</DrawerTitle>
+                  </div>
+                </div>
+                <DrawerDescription className="mt-4 text-base text-foreground">
+                  {servicioActivo?.detalle?.descripcion}
+                </DrawerDescription>
+              </DrawerHeader>
+              <div className="flex-1 overflow-y-auto px-6 pb-6">
+                {servicioActivo?.imagen && (
+                  <img src={servicioActivo.imagen} alt={servicioActivo.title} className="w-full max-h-56 object-cover rounded-xl mb-6 border border-[#7A1F1F]/10 shadow" />
+                )}
+                <div className="mb-6">
+                  <h3 className="text-lg font-bold text-[#7A1F1F] mb-2">Beneficios</h3>
+                  <ul className="list-disc pl-6 text-base text-muted-foreground">
+                    {servicioActivo?.detalle?.beneficios?.map((b, i) => (
+                      <li key={i}>{b}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="mb-6">
+                  <h3 className="text-lg font-bold text-[#7A1F1F] mb-2">Incluye</h3>
+                  <ul className="list-disc pl-6 text-base text-muted-foreground">
+                    {servicioActivo?.detalle?.incluye?.map((b, i) => (
+                      <li key={i}>{b}</li>
+                    ))}
+                  </ul>
+                </div>
+                {servicioActivo?.detalle?.articulos && (
+                  <div className="mb-6">
+                    <h3 className="text-lg font-bold text-[#7A1F1F] mb-2">Artículos Relacionados</h3>
+                    <ul className="list-disc pl-6 text-base text-muted-foreground">
+                      {servicioActivo.detalle.articulos.map((a, i) => (
+                        <li key={i}><a href={a.url} className="text-primary underline hover:text-[#7A1F1F]" target="_blank" rel="noopener">{a.titulo}</a></li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {servicioActivo?.detalle?.links && (
+                  <div className="mb-6">
+                    <h3 className="text-lg font-bold text-[#7A1F1F] mb-2">Links Útiles</h3>
+                    <ul className="list-disc pl-6 text-base text-muted-foreground">
+                      {servicioActivo.detalle.links.map((l, i) => (
+                        <li key={i}><a href={l.url} className="text-primary underline hover:text-[#7A1F1F]" target="_blank" rel="noopener">{l.titulo}</a></li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+              <DrawerClose asChild>
+                <Button className="mt-4 w-full" variant="outline">Cerrar</Button>
+              </DrawerClose>
+            </DrawerContent>
+          </Drawer>
         </div>
       </section>
 
@@ -298,18 +781,32 @@ const LandingPage = () => {
             Estamos listos para ayudarte a alcanzar tus metas financieras. Envíanos un mensaje o encuéntranos.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-            <div className="space-y-8 text-left">
-              <div className="flex items-center space-x-5">
-                <MapPin className="h-10 w-10 text-[#7A1F1F]" />
-                <p className="text-lg text-muted-foreground">Av. José Leonardo Ortiz 144, Chiclayo</p>
+            <div className="flex flex-col gap-8 text-left justify-between h-full">
+              <div>
+                <div className="flex items-center space-x-5">
+                  <MapPin className="h-10 w-10 text-[#7A1F1F]" />
+                  <p className="text-lg text-muted-foreground">Av. José Leonardo Ortiz 144, Chiclayo</p>
+                </div>
+                <div className="flex items-center space-x-5 mt-4">
+                  <Phone className="h-10 w-10 text-[#7A1F1F]" />
+                  <p className="text-lg text-muted-foreground">(074) 204880</p>
+                </div>
+                <div className="flex items-center space-x-5 mt-4">
+                  <Mail className="h-10 w-10 text-[#7A1F1F]" />
+                  <p className="text-lg text-muted-foreground">benjacont_2@hotmail.com</p>
+                </div>
               </div>
-              <div className="flex items-center space-x-5">
-                <Phone className="h-10 w-10 text-[#7A1F1F]" />
-                <p className="text-lg text-muted-foreground">(074) 204880</p>
-              </div>
-              <div className="flex items-center space-x-5">
-                <Mail className="h-10 w-10 text-[#7A1F1F]" />
-                <p className="text-lg text-muted-foreground">benjacont_2@hotmail.com</p>
+              <div className="mt-8 rounded-xl overflow-hidden shadow-lg border border-[#7A1F1F]/10">
+                <iframe
+                  title="Ubicación en Google Maps"
+                  src="https://www.google.com/maps?q=Av.+Jos%C3%A9+Leonardo+Ortiz+144,+Chiclayo&output=embed"
+                  width="100%"
+                  height="220"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
               </div>
             </div>
             <div className="space-y-6">
